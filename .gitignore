@@ -1,0 +1,30 @@
+# ===== Node / frontend (applies to any subfolder) =====
+node_modules/
+dist/
+dist-ssr/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local env overrides (keep .env.development committed — it only has the dev API URL)
+*.local
+.env.local
+.env.*.local
+
+# ===== .NET / backend (C# build artifacts) =====
+bin/
+obj/
+appsettings.Development.json
+*.user
+*.suo
+testResults/
+
+# ===== Editor / OS =====
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.vs/
+.DS_Store
+Thumbs.db
