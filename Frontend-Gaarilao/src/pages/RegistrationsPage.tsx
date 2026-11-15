@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 // SWITCH BETWEEN SAMPLE DATA AND THE REAL API HERE.
 // Sample data (default while the backend is not ready):
@@ -35,50 +35,64 @@ export function RegistrationsPage() {
     totalCount: number;
     totalPages: number;
   }>({ totalCount: 0, totalPages: 1 });
-  const [loading, setLoading] = useState(true);
-  const [summaryLoading, setSummaryLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Bumping this re-runs both fetch effects — that is the "Try again" button.
+  const [reloadToken, setReloadToken] = useState(0);
 
   // Debounced copy of the search text so the API is only called after the
   // user stops typing (~400 ms).
   const debouncedName = useDebounce(filters.participantName, 400);
 
-  const loadRegistrations = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await getRegistrations({ ...filters, participantName: debouncedName });
-      setRegistrations(response.items);
-      setListState({ totalCount: response.totalCount, totalPages: response.totalPages });
-    } catch {
-      setError("Cannot reach the API. Please check your connection and try again.");
-      setRegistrations([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [filters, debouncedName]);
+  // A key that identifies exactly what the table should be showing right now.
+  // "Loading" is derived (current key not answered yet) instead of being set
+  // synchronously inside an effect, which avoids cascading renders and keeps
+  // stale responses from overwriting newer data.
+  const requestKey = `${filters.type}|${filters.status}|${filters.page}|${filters.pageSize}|${debouncedName}|${reloadToken}`;
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const loading = loadedKey !== requestKey;
 
-  const loadSummary = useCallback(async () => {
-    setSummaryLoading(true);
-    try {
-      setSummary(await getSummary());
-    } catch {
-      // Summary failure alone should not block the table; KpiCards shows a message.
-      setSummary(null);
-    } finally {
-      setSummaryLoading(false);
-    }
-  }, []);
-
-  // Re-fetch registrations whenever filters (or the debounced name) change.
+  // Fetch the registrations for the current filters.
   useEffect(() => {
-    loadRegistrations();
-  }, [loadRegistrations]);
+    let active = true;
+    getRegistrations({ ...filters, participantName: debouncedName })
+      .then((response) => {
+        if (!active) return;
+        setRegistrations(response.items);
+        setListState({ totalCount: response.totalCount, totalPages: response.totalPages });
+        setError(null);
+        setLoadedKey(requestKey);
+      })
+      .catch(() => {
+        if (!active) return;
+        setError("Cannot reach the API. Please check your connection and try again.");
+        setRegistrations([]);
+        setLoadedKey(requestKey);
+      });
+    return () => {
+      active = false;
+    };
+  }, [filters, debouncedName, requestKey]);
 
-  // Re-fetch the summary when filters change too, so totals reflect them.
+  // The summary refetches when type/status filters or the search change too,
+  // so totals always reflect what the list is showing.
+  const summaryKey = `${filters.type}|${filters.status}|${debouncedName}|${reloadToken}`;
+
   useEffect(() => {
-    loadSummary();
-  }, [loadSummary, filters.type, filters.status, debouncedName]);
+    let active = true;
+    getSummary()
+      .then((nextSummary) => {
+        if (!active) return;
+        setSummary(nextSummary);
+      })
+      .catch(() => {
+        // Summary failure alone should not block the table; KpiCards shows placeholders.
+        if (!active) return;
+        setSummary(null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [summaryKey]);
 
   // Any filter change resets pagination back to page 1.
   const updateFilters = (patch: Partial<RegistrationFilterState>) =>
@@ -100,11 +114,6 @@ export function RegistrationsPage() {
       {/* KPI cards first — visual hierarchy: cards, then filters, then table. */}
       <section aria-label="Event summary" className="mb-6">
         <KpiCards summary={summary} />
-        {summaryLoading && summary === null && (
-          <p className="mt-2 text-sm text-slate-500" role="status">
-            Loading summary…
-          </p>
-        )}
       </section>
 
       <section className="mb-4" aria-label="Filters">
@@ -117,18 +126,14 @@ export function RegistrationsPage() {
         />
       </section>
 
-      {/* Loading / empty / error states — the page is never blank. */}
-      {loading && (
-        <p className="mb-4 text-sm font-medium text-slate-600" role="status">
-          Loading registrations…
-        </p>
-      )}
+      {/* Loading / empty / error states — the page is never blank.
+          Loading is communicated by the KPI placeholders and skeleton rows. */}
       {error && (
         <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4" role="alert">
           <p className="text-sm font-medium text-red-700">{error}</p>
           <button
             type="button"
-            onClick={loadRegistrations}
+            onClick={() => setReloadToken((token) => token + 1)}
             className="mt-2 rounded-md bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
           >
             Try again

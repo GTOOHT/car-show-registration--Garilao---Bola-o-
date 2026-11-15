@@ -6,10 +6,16 @@ const peso = (amount: number) =>
 
 export function KpiCards({ summary }: { summary: RegistrationSummary | null }) {
   if (summary === null) {
+    // Placeholder KPI cards while the summary loads, so the row never jumps.
     return (
-      <p className="text-sm text-slate-500" role="status">
-        Loading summary…
-      </p>
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6" aria-hidden="true">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="h-3 w-24 animate-pulse rounded bg-slate-200" />
+            <div className="mt-2 h-7 w-16 animate-pulse rounded bg-slate-200" />
+          </div>
+        ))}
+      </div>
     );
   }
 
