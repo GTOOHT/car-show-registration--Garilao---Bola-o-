@@ -20,7 +20,7 @@ export function RegistrationFilters({
   onClear,
 }: RegistrationFiltersProps) {
   return (
-    <section className="flex flex-wrap items-center gap-3" aria-label="Registration filters">
+    <section className="flex flex-wrap items-end gap-3" aria-label="Registration filters">
       <div>
         <label htmlFor="participant-search" className="mb-1 block text-xs font-medium text-slate-500">
           Participant name
@@ -65,7 +65,7 @@ export function RegistrationFilters({
           <option value="All">All</option>
           <option value="Pending">Pending</option>
           <option value="Confirmed">Confirmed</option>
-          <option value="CheckedIn">CheckedIn</option>
+          <option value="CheckedIn">Checked In</option>
           <option value="Cancelled">Cancelled</option>
         </select>
       </div>
@@ -73,7 +73,7 @@ export function RegistrationFilters({
       <button
         type="button"
         onClick={onClear}
-        className="mt-5 self-start rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         Clear filters
       </button>
