@@ -1,8 +1,10 @@
-Project Title: Car Show Registration System
+# Project Title: Car Show Registration System
 
-MEMBER ROLE
-Aivy C. Bolaño - Backend Developer
-Christian Erl Garilao - Frontend Developer
+## Team Members and Roles
+| Member | Role |
+|---|---|
+| Aivy C. Bolaño | Backend Developer |
+| Christian Erl Garilao | Frontend Developer |
 
 ## How to Run
 
