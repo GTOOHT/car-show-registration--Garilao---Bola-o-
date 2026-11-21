@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 // SWITCH BETWEEN SAMPLE DATA AND THE REAL API HERE.
 // Sample data (default while the backend is not ready):
-import { getRegistrations, getSummary } from "../api/sample-data";
+import { getRegistrations, getSummary, createRegistration, type CreateRegistrationInput } from "../api/sample-data";
 // Real API (comment the lines above, uncomment these):
 // import { getRegistrations, getSummary } from "../api/registrationsApi";
 
@@ -16,6 +16,7 @@ import { KpiCards } from "../components/KpiCards";
 import { RegistrationFilters } from "../components/RegistrationFilters";
 import { RegistrationTable } from "../components/RegistrationTable";
 import { Pagination } from "../components/Pagination";
+import { AddRegistrationModal } from "../components/AddRegistrationModal";
 
 const DEFAULT_FILTERS: RegistrationFilterState = {
   participantName: "",
@@ -38,6 +39,9 @@ export function RegistrationsPage() {
   const [error, setError] = useState<string | null>(null);
   // Bumping this re-runs both fetch effects — that is the "Try again" button.
   const [reloadToken, setReloadToken] = useState(0);
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
 
   // Debounced copy of the search text so the API is only called after the
   // user stops typing (~400 ms).
@@ -100,6 +104,21 @@ export function RegistrationsPage() {
 
   const handleClear = () => setFilters(DEFAULT_FILTERS);
 
+  const handleAddRegistration = async (input: CreateRegistrationInput) => {
+    try {
+      setError(null);
+      const response = await createRegistration(input);
+      // Add the new registration to the top of the list
+      setRegistrations((prev) => [response.registration, ...prev]);
+      setListState((prev) => ({ ...prev, totalCount: prev.totalCount + 1 }));
+      // Also refresh summary
+      const newSummary = await getSummary();
+      setSummary(newSummary);
+    } catch {
+      setError("Failed to add participant. Please try again.");
+    }
+  };
+
   const isEmpty = !loading && !error && registrations.length === 0;
 
   return (
@@ -116,7 +135,8 @@ export function RegistrationsPage() {
         <KpiCards summary={summary} />
       </section>
 
-      <section className="mb-4" aria-label="Filters">
+      {/* Action and Filters bar */}
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <RegistrationFilters
           filters={filters}
           onSearchChange={(participantName) => updateFilters({ participantName })}
@@ -124,7 +144,17 @@ export function RegistrationsPage() {
           onStatusChange={(status) => updateFilters({ status })}
           onClear={handleClear}
         />
-      </section>
+        <button
+          type="button"
+          onClick={() => { setModalKey((k) => k + 1); setIsModalOpen(true); }}
+          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shrink-0 self-start sm:self-end"
+        >
+          <svg className="inline-block h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Add Participant
+        </button>
+      </div>
 
       {/* Loading / empty / error states — the page is never blank.
           Loading is communicated by the KPI placeholders and skeleton rows. */}
@@ -168,6 +198,9 @@ export function RegistrationsPage() {
           onPageSizeChange={(pageSize) => updateFilters({ pageSize })}
         />
       </div>
+
+      {/* Add Registration Modal */}
+      <AddRegistrationModal key={modalKey} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddRegistration} />
     </main>
   );
 }
