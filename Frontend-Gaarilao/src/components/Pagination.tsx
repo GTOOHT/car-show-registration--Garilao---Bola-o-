@@ -39,20 +39,20 @@ export function Pagination({
       className="flex flex-wrap items-center justify-between gap-3"
       aria-label="Registrations pagination"
     >
-      <p className="text-sm text-slate-500">
-        Showing <span className="font-semibold text-slate-700">{start}–{end}</span> of{" "}
-        <span className="font-semibold text-slate-700">{totalCount}</span>
+      <p className="text-sm text-slate-500 dark:text-slate-400">
+        Showing <span className="font-semibold text-slate-700 dark:text-slate-200">{start}–{end}</span> of{" "}
+        <span className="font-semibold text-slate-700 dark:text-slate-200">{totalCount}</span>
       </p>
 
       <div className="flex items-center gap-2">
-        <label htmlFor="page-size" className="text-sm text-slate-500">
+        <label htmlFor="page-size" className="text-sm text-slate-500 dark:text-slate-400">
           Rows per page
         </label>
         <select
           id="page-size"
           value={pageSize}
           onChange={(e) => onPageSizeChange(Number(e.target.value))}
-          className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
         >
           {[5, 10, 20].map((size) => (
             <option key={size} value={size}>
@@ -65,7 +65,7 @@ export function Pagination({
           type="button"
           onClick={() => goTo(page - 1)}
           disabled={loading || page <= 1}
-          className={`${buttonBase} border-slate-300 bg-white text-slate-700 hover:bg-slate-50`}
+          className={`${buttonBase} border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800`}
         >
           Prev
         </button>
@@ -80,7 +80,7 @@ export function Pagination({
             className={`${buttonBase} border ${
               p === page
                 ? "border-blue-600 bg-blue-600 text-white hover:bg-blue-700"
-                : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
             }`}
           >
             {p}
@@ -91,7 +91,7 @@ export function Pagination({
           type="button"
           onClick={() => goTo(page + 1)}
           disabled={loading || page >= totalPages}
-          className={`${buttonBase} border-slate-300 bg-white text-slate-700 hover:bg-slate-50`}
+          className={`${buttonBase} border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800`}
         >
           Next
         </button>

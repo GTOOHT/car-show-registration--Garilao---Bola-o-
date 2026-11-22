@@ -12,6 +12,8 @@ import type {
   RegistrationSummary,
 } from "../api/types";
 import { useDebounce } from "../hooks/useDebounce";
+import { useTheme } from "../hooks/useTheme";
+import { DashboardHeader } from "../components/DashboardHeader";
 import { KpiCards } from "../components/KpiCards";
 import { RegistrationFilters } from "../components/RegistrationFilters";
 import { RegistrationTable } from "../components/RegistrationTable";
@@ -42,6 +44,9 @@ export function RegistrationsPage() {
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
+
+  // Light / dark theme, persisted between visits.
+  const { theme, setTheme } = useTheme();
 
   // Debounced copy of the search text so the API is only called after the
   // user stops typing (~400 ms).
@@ -122,85 +127,87 @@ export function RegistrationsPage() {
   const isEmpty = !loading && !error && registrations.length === 0;
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-8">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">Car Show 2027 — Registration Dashboard</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Browse, search and filter event registrations. AutoVista Events · Sorsogon City Coliseum
-        </p>
-      </header>
+    <div className="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
+      <DashboardHeader theme={theme} onThemeChange={setTheme} />
 
-      {/* KPI cards first — visual hierarchy: cards, then filters, then table. */}
-      <section aria-label="Event summary" className="mb-6">
-        <KpiCards summary={summary} />
-      </section>
+      <main className="mx-auto w-full max-w-6xl px-4 py-8">
+        {/* KPI cards first — visual hierarchy: cards, then filters, then table. */}
+        <section aria-label="Event summary" className="mb-6">
+          <KpiCards summary={summary} />
+        </section>
 
-      {/* Action and Filters bar */}
-      <div className="mb-4 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-        <RegistrationFilters
-          filters={filters}
-          onSearchChange={(participantName) => updateFilters({ participantName })}
-          onTypeChange={(type) => updateFilters({ type })}
-          onStatusChange={(status) => updateFilters({ status })}
-          onClear={handleClear}
-        />
-        <button
-          type="button"
-          onClick={() => { setModalKey((k) => k + 1); setIsModalOpen(true); }}
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shrink-0 self-start sm:self-end"
-        >
-          <svg className="inline-block h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Add Participant
-        </button>
-      </div>
-
-      {/* Loading / empty / error states — the page is never blank.
-          Loading is communicated by the KPI placeholders and skeleton rows. */}
-      {error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4" role="alert">
-          <p className="text-sm font-medium text-red-700">{error}</p>
+        {/* Action and Filters bar */}
+        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <RegistrationFilters
+            filters={filters}
+            onSearchChange={(participantName) => updateFilters({ participantName })}
+            onTypeChange={(type) => updateFilters({ type })}
+            onStatusChange={(status) => updateFilters({ status })}
+            onClear={handleClear}
+          />
           <button
             type="button"
-            onClick={() => setReloadToken((token) => token + 1)}
-            className="mt-2 rounded-md bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+            onClick={() => { setModalKey((k) => k + 1); setIsModalOpen(true); }}
+            className="shrink-0 self-start rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-950 sm:self-end"
           >
-            Try again
+            <svg className="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Participant
           </button>
         </div>
-      )}
-      {isEmpty && (
-        <div className="mb-4 rounded-lg border border-slate-200 bg-white p-8 text-center">
-          <p className="text-sm font-medium text-slate-600">No registrations match your filters.</p>
-          <button
-            type="button"
-            onClick={handleClear}
-            className="mt-3 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+
+        {/* Loading / empty / error states — the page is never blank.
+            Loading is communicated by the KPI placeholders and skeleton rows. */}
+        {error && (
+          <div
+            className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-900/70 dark:bg-red-950/40"
+            role="alert"
           >
-            Clear filters
-          </button>
+            <p className="text-sm font-medium text-red-700 dark:text-red-300">{error}</p>
+            <button
+              type="button"
+              onClick={() => setReloadToken((token) => token + 1)}
+              className="mt-2 rounded-md bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-offset-2 dark:focus:ring-offset-slate-950"
+            >
+              Try again
+            </button>
+          </div>
+        )}
+        {isEmpty && (
+          <div className="mb-4 rounded-lg border border-slate-200 bg-white p-8 text-center dark:border-slate-800 dark:bg-slate-900">
+            <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
+              No registrations match your filters.
+            </p>
+            <button
+              type="button"
+              onClick={handleClear}
+              className="mt-3 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-800 dark:focus:ring-offset-2 dark:focus:ring-offset-slate-950"
+            >
+              Clear filters
+            </button>
+          </div>
+        )}
+
+        <section aria-label="Registrations table">
+          <RegistrationTable registrations={registrations} loading={loading} />
+        </section>
+
+        <div className="mt-4">
+          <Pagination
+            page={filters.page}
+            pageSize={filters.pageSize}
+            totalCount={listState.totalCount}
+            totalPages={listState.totalPages}
+            loading={loading}
+            onPageChange={(page) => setFilters((prev) => ({ ...prev, page }))}
+            onPageSizeChange={(pageSize) => updateFilters({ pageSize })}
+          />
         </div>
-      )}
 
-      <section aria-label="Registrations table">
-        <RegistrationTable registrations={registrations} loading={loading} />
-      </section>
-
-      <div className="mt-4">
-        <Pagination
-          page={filters.page}
-          pageSize={filters.pageSize}
-          totalCount={listState.totalCount}
-          totalPages={listState.totalPages}
-          loading={loading}
-          onPageChange={(page) => setFilters((prev) => ({ ...prev, page }))}
-          onPageSizeChange={(pageSize) => updateFilters({ pageSize })}
-        />
-      </div>
-
-      {/* Add Registration Modal */}
-      <AddRegistrationModal key={modalKey} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddRegistration} />
-    </main>
+        {/* Add Registration Modal */}
+        <AddRegistrationModal key={modalKey} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddRegistration} />
+      </main>
+    </div>
   );
 }

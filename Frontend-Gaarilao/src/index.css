@@ -1,1 +1,66 @@
 @import "tailwindcss";
+
+/* Class-based dark mode so the toggle controls the whole document. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand: #a01d33;
+  --color-brand-dark: #85172a;
+  --color-brand-blue: #2f6f99;
+  --color-brand-sky: #7cc8ea;
+}
+
+html {
+  scrollbar-color: #94a3b8 #f1f5f9;
+}
+
+html.dark {
+  color-scheme: dark;
+  scrollbar-color: #475569 #020617;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background-color: #f8fafc;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.dark body {
+  background-color: #020617;
+}
+
+::selection {
+  background-color: #fecaca;
+  color: #450a0a;
+}
+
+html.dark ::selection {
+  background-color: #7f1d1d;
+  color: #fef2f2;
+}
+
+/* Red event banner with the blue fill + white outline lettering from the brief. */
+.brand-banner {
+  background-color: #a41e36;
+  background-image: linear-gradient(105deg, #ab2039 0%, #9e1c31 55%, #86162a 100%);
+}
+
+html.dark .brand-banner {
+  background-color: #7a1526;
+  background-image: linear-gradient(105deg, #8a1a2d 0%, #741425 55%, #5c0f1c 100%);
+}
+
+.brand-banner-title {
+  color: #8fd3f2;
+  -webkit-text-stroke: 1.25px #ffffff;
+  paint-order: stroke fill;
+  text-shadow: 0 2px 3px rgb(54 7 17 / 0.55);
+}
+
+@media (max-width: 639px) {
+  .brand-banner-title {
+    -webkit-text-stroke-width: 0.6px;
+  }
+}

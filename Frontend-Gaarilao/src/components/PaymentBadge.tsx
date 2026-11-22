@@ -4,7 +4,7 @@ import type { PaymentStatus } from "../api/types";
 const BADGES: Record<PaymentStatus, { label: string; classes: string; icon: ReactNode }> = {
   Unpaid: {
     label: "Unpaid",
-    classes: "bg-red-100 text-red-800 ring-red-600/20",
+    classes: "bg-red-100 text-red-800 ring-red-600/20 dark:bg-red-500/15 dark:text-red-300 dark:ring-red-400/30",
     icon: (
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5" aria-hidden="true">
         <circle cx="8" cy="8" r="5.75" />
@@ -14,7 +14,7 @@ const BADGES: Record<PaymentStatus, { label: string; classes: string; icon: Reac
   },
   Partial: {
     label: "Partial",
-    classes: "bg-amber-100 text-amber-800 ring-amber-600/20",
+    classes: "bg-amber-100 text-amber-800 ring-amber-600/20 dark:bg-amber-500/15 dark:text-amber-300 dark:ring-amber-400/30",
     icon: (
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5" aria-hidden="true">
         <circle cx="8" cy="8" r="5.75" />
@@ -25,7 +25,7 @@ const BADGES: Record<PaymentStatus, { label: string; classes: string; icon: Reac
   },
   Paid: {
     label: "Paid",
-    classes: "bg-green-100 text-green-800 ring-green-600/20",
+    classes: "bg-green-100 text-green-800 ring-green-600/20 dark:bg-green-500/15 dark:text-green-300 dark:ring-green-400/30",
     icon: (
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5" aria-hidden="true">
         <circle cx="8" cy="8" r="5.75" />

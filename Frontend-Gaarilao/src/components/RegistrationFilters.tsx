@@ -10,7 +10,9 @@ interface RegistrationFiltersProps {
 
 const inputClasses =
   "rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm " +
-  "placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500";
+  "placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 " +
+  "dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-400";
+const labelClasses = "mb-1 block text-xs font-medium text-slate-500 dark:text-slate-400";
 
 export function RegistrationFilters({
   filters,
@@ -22,7 +24,7 @@ export function RegistrationFilters({
   return (
     <section className="flex flex-wrap items-end gap-3" aria-label="Registration filters">
       <div>
-        <label htmlFor="participant-search" className="mb-1 block text-xs font-medium text-slate-500">
+        <label htmlFor="participant-search" className={labelClasses}>
           Participant name
         </label>
         <input
@@ -36,7 +38,7 @@ export function RegistrationFilters({
       </div>
 
       <div>
-        <label htmlFor="type-filter" className="mb-1 block text-xs font-medium text-slate-500">
+        <label htmlFor="type-filter" className={labelClasses}>
           Registration type
         </label>
         <select
@@ -53,7 +55,7 @@ export function RegistrationFilters({
       </div>
 
       <div>
-        <label htmlFor="status-filter" className="mb-1 block text-xs font-medium text-slate-500">
+        <label htmlFor="status-filter" className={labelClasses}>
           Status
         </label>
         <select
@@ -73,7 +75,7 @@ export function RegistrationFilters({
       <button
         type="button"
         onClick={onClear}
-        className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
       >
         Clear filters
       </button>
