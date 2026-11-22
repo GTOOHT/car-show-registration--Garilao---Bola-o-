@@ -51,6 +51,8 @@ public sealed class AppDbContext : DbContext, IAppDbContext
             .IsRequired()
             .HasMaxLength(15);
 
+            entity.HasIndex(r => r.PlateNumber).IsUnique();
+
             entity.HasIndex(r => r.PlateNumber)
             .IsUnique();
 
