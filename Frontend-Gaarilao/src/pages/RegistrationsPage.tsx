@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 // SWITCH BETWEEN SAMPLE DATA AND THE REAL API HERE.
 // Sample data (default while the backend is not ready):
-import { getRegistrations, getSummary, createRegistration, type CreateRegistrationInput } from "../api/sample-data";
+// import { getRegistrations, getSummary, createRegistration, type CreateRegistrationInput } from "../api/sample-data";
 // Real API (comment the lines above, uncomment these):
-// import { getRegistrations, getSummary } from "../api/registrationsApi";
+import { getRegistrations, getSummary, createRegistration, type CreateRegistrationInput } from "../api/registrationsApi";
 
 import type {
   Registration,

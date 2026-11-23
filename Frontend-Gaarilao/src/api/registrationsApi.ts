@@ -3,6 +3,7 @@
 // RegistrationsPage.tsx changes.
 
 import type {
+  Registration,
   RegistrationFilters,
   RegistrationListResponse,
   RegistrationSummary,
@@ -36,4 +37,41 @@ export async function getSummary(): Promise<RegistrationSummary> {
     throw new Error(`The API returned an error (HTTP ${response.status}).`);
   }
   return response.json() as Promise<RegistrationSummary>;
+}
+
+export interface CreateRegistrationInput {
+  participantName: string;
+  contactNumber: string;
+  email: string;
+  address: string;
+  carMakeModel: string;
+  plateNumber: string;
+  registrationType: string;
+  amountPaid: number;
+}
+
+export async function createRegistration(input: CreateRegistrationInput): Promise<{ registration: Registration }> {
+  const response = await fetch(`${API_BASE_URL}/api/registrations`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      participantName: input.participantName,
+      contactNumber: input.contactNumber,
+      email: input.email,
+      address: input.address,
+      carMakeModel: input.carMakeModel,
+      plateNumber: input.plateNumber,
+      registrationType: input.registrationType,
+      amountPaid: input.amountPaid,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`The API returned an error (HTTP ${response.status}).`);
+  }
+
+  const created = (await response.json()) as Registration;
+  return { registration: created };
 }
