@@ -1,6 +1,45 @@
 @Api_HostAddress = http://localhost:5205
+@RegistrationId = REPLACE-WITH-AN-EXISTING-GUID
 
-GET {{Api_HostAddress}}/api/students/
+### 1. Create a registration
+POST {{Api_HostAddress}}/api/registrations
+Content-Type: application/json
+
+{
+"participantName": "Documentation Test",
+"contactNumber": "09171234567",
+"email": "documentation@example.com",
+"address": "Sorsogon City",
+"carMakeModel": "Toyota Vios",
+"plateNumber": "DOC 8001",
+"registrationType": "Exhibitor",
+"amountPaid": 500
+}
+
+### 2. Get all registrations
+GET {{Api_HostAddress}}/api/registrations
 Accept: application/json
 
-###
+### 3. Get registrations with pagination
+GET {{Api_HostAddress}}/api/registrations?page=1&pageSize=5
+Accept: application/json
+
+### 4. Filter registrations by type
+GET {{Api_HostAddress}}/api/registrations?type=VIP
+Accept: application/json
+
+### 5. Filter registrations by status
+GET {{Api_HostAddress}}/api/registrations?status=Confirmed
+Accept: application/json
+
+### 6. Filter by participant name
+GET {{Api_HostAddress}}/api/registrations?participantName=Juan
+Accept: application/json
+
+### 7. Get registration by ID
+GET {{Api_HostAddress}}/api/registrations/{{RegistrationId}}
+Accept: application/json
+
+### 8. Get registration summary
+GET {{Api_HostAddress}}/api/registrations/summary
+Accept: application/json
