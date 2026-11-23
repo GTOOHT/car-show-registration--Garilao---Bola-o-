@@ -9,7 +9,8 @@ import type {
   RegistrationSummary,
 } from "./types";
 
-const sampleRegistrations: Registration[] = [
+// eslint-disable-next-line prefer-const -- mutated via unshift in createRegistration
+let sampleRegistrations: Registration[] = [
   { id: "3f2c9a1e-0001", registrationNumber: "CS27-0001", registrationDate: "2027-02-10T08:30:00Z", participantName: "Juan Dela Cruz", contactNumber: "09171234567", email: "juan@example.com", address: "123 Rizal St., Naga City", carMakeModel: "Toyota Supra MK4", plateNumber: "ABC 1234", registrationType: "Competitor", status: "Confirmed", registrationFee: 2500, amountPaid: 1000, paymentStatus: "Partial" },
   { id: "3f2c9a1e-0002", registrationNumber: "CS27-0002", registrationDate: "2027-02-10T09:05:00Z", participantName: "Maria Santos", contactNumber: "09281234567", email: "maria@example.com", address: "45 Magsaysay Ave., Legazpi City", carMakeModel: "Ford Mustang GT", plateNumber: "XYZ 5678", registrationType: "VIP", status: "Confirmed", registrationFee: 5000, amountPaid: 5000, paymentStatus: "Paid" },
   { id: "3f2c9a1e-0003", registrationNumber: "CS27-0003", registrationDate: "2027-02-10T10:12:00Z", participantName: "Pedro Reyes", contactNumber: "09061234567", email: "pedro@example.com", address: "78 Quezon Blvd., Sorsogon City", carMakeModel: "Honda Civic Type R", plateNumber: "LMN 9012", registrationType: "Exhibitor", status: "Pending", registrationFee: 2000, amountPaid: 0, paymentStatus: "Unpaid" },
@@ -79,4 +80,60 @@ export async function getSummary(): Promise<RegistrationSummary> {
     totalPayments,
     uncollectedPayments: totalFees - totalPayments,
   };
+}
+
+// Generate next registration number (e.g., CS27-0029)
+function generateRegistrationNumber(): string {
+  const numbers = sampleRegistrations
+    .map((r) => parseInt(r.registrationNumber.split("-")[1], 10))
+    .filter((n) => !isNaN(n));
+  const nextNum = numbers.length > 0 ? Math.max(...numbers) + 1 : 1;
+  return `CS27-${String(nextNum).padStart(4, "0")}`;
+}
+
+export interface CreateRegistrationInput {
+  participantName: string;
+  contactNumber: string;
+  email: string;
+  address: string;
+  carMakeModel: string;
+  plateNumber: string;
+  registrationType: Registration["registrationType"];
+  status: Registration["status"];
+  registrationFee: number;
+  amountPaid: number;
+}
+
+export interface CreateRegistrationResponse {
+  registration: Registration;
+}
+
+export async function createRegistration(input: CreateRegistrationInput): Promise<CreateRegistrationResponse> {
+  // Simulate network latency
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  const now = new Date().toISOString();
+  const paymentStatus: Registration["paymentStatus"] =
+    input.amountPaid === 0 ? "Unpaid" : input.amountPaid < input.registrationFee ? "Partial" : "Paid";
+
+  const newRegistration: Registration = {
+    id: crypto.randomUUID(),
+    registrationNumber: generateRegistrationNumber(),
+    registrationDate: now,
+    participantName: input.participantName,
+    contactNumber: input.contactNumber,
+    email: input.email,
+    address: input.address,
+    carMakeModel: input.carMakeModel,
+    plateNumber: input.plateNumber,
+    registrationType: input.registrationType,
+    status: input.status,
+    registrationFee: input.registrationFee,
+    amountPaid: input.amountPaid,
+    paymentStatus,
+  };
+
+  sampleRegistrations.unshift(newRegistration); // Add to beginning so it appears first
+
+  return { registration: newRegistration };
 }

@@ -118,10 +118,10 @@ export function RegistrationTable({ registrations, loading }: RegistrationTableP
   ];
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
-      <table className="min-w-full text-sm text-left">
+    <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <table className="min-w-full text-left text-sm">
         <caption className="sr-only">Car Show 2027 event registrations</caption>
-        <thead className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <thead className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-400">
           <tr>
             {columns.map((col) => {
               const active = sortKey === col.key;
@@ -135,8 +135,10 @@ export function RegistrationTable({ registrations, loading }: RegistrationTableP
                   <button
                     type="button"
                     onClick={() => toggleSort(col.key)}
-                    className={`inline-flex items-center gap-1 uppercase tracking-wide transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded ${
-                      active ? "text-slate-800" : "hover:text-slate-700"
+                    className={`inline-flex items-center gap-1 rounded uppercase tracking-wide transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                      active
+                        ? "text-slate-800 dark:text-slate-100"
+                        : "hover:text-slate-700 dark:hover:text-slate-200"
                     }`}
                   >
                     {col.label}
@@ -150,36 +152,36 @@ export function RegistrationTable({ registrations, loading }: RegistrationTableP
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
           {loading
             ? Array.from({ length: 5 }).map((_, i) => (
                 <tr key={i}>
                   {Array.from({ length: 8 }).map((_, j) => (
                     <td key={j} className="px-4 py-3">
-                      <div className="h-4 w-full animate-pulse rounded bg-slate-200" />
+                      <div className="h-4 w-full animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
                     </td>
                   ))}
                 </tr>
               ))
             : sorted.map((r) => (
-                <tr key={r.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-mono text-xs font-semibold text-slate-700">
+                <tr key={r.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/60">
+                  <td className="px-4 py-3 font-mono text-xs font-semibold text-slate-700 dark:text-slate-200">
                     {r.registrationNumber}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-slate-600">{date(r.registrationDate)}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-slate-600 dark:text-slate-400">{date(r.registrationDate)}</td>
                   <td className="px-4 py-3">
-                    <p className="font-medium text-slate-800">{r.participantName}</p>
-                    <p className="text-xs text-slate-500">{r.email}</p>
+                    <p className="font-medium text-slate-800 dark:text-slate-100">{r.participantName}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{r.email}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-slate-800">{r.carMakeModel}</p>
-                    <p className="font-mono text-xs text-slate-500">{r.plateNumber}</p>
+                    <p className="text-slate-800 dark:text-slate-100">{r.carMakeModel}</p>
+                    <p className="font-mono text-xs text-slate-500 dark:text-slate-400">{r.plateNumber}</p>
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{r.registrationType}</td>
+                  <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{r.registrationType}</td>
                   <td className="px-4 py-3">
                     <StatusBadge status={r.status} />
                   </td>
-                  <td className="px-4 py-3 text-right whitespace-nowrap text-slate-700">
+                  <td className="whitespace-nowrap px-4 py-3 text-right text-slate-700 dark:text-slate-200">
                     {peso(r.registrationFee)} / {peso(r.amountPaid)}
                   </td>
                   <td className="px-4 py-3">

@@ -4,7 +4,7 @@ import type { RegistrationStatus } from "../api/types";
 const BADGES: Record<RegistrationStatus, { label: string; classes: string; icon: ReactNode }> = {
   Pending: {
     label: "Pending",
-    classes: "bg-amber-100 text-amber-800 ring-amber-600/20",
+    classes: "bg-amber-100 text-amber-800 ring-amber-600/20 dark:bg-amber-500/15 dark:text-amber-300 dark:ring-amber-400/30",
     icon: (
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5" aria-hidden="true">
         <circle cx="8" cy="8" r="5.75" />
@@ -14,7 +14,7 @@ const BADGES: Record<RegistrationStatus, { label: string; classes: string; icon:
   },
   Confirmed: {
     label: "Confirmed",
-    classes: "bg-blue-100 text-blue-800 ring-blue-600/20",
+    classes: "bg-blue-100 text-blue-800 ring-blue-600/20 dark:bg-blue-500/15 dark:text-blue-300 dark:ring-blue-400/30",
     icon: (
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5" aria-hidden="true">
         <path d="M3.5 8.5l3 3 6-6.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -23,7 +23,7 @@ const BADGES: Record<RegistrationStatus, { label: string; classes: string; icon:
   },
   CheckedIn: {
     label: "Checked In",
-    classes: "bg-emerald-100 text-emerald-800 ring-emerald-600/20",
+    classes: "bg-emerald-100 text-emerald-800 ring-emerald-600/20 dark:bg-emerald-500/15 dark:text-emerald-300 dark:ring-emerald-400/30",
     icon: (
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5" aria-hidden="true">
         <rect x="3" y="2.75" width="10" height="10.5" rx="1.5" />
@@ -33,7 +33,7 @@ const BADGES: Record<RegistrationStatus, { label: string; classes: string; icon:
   },
   Cancelled: {
     label: "Cancelled",
-    classes: "bg-red-100 text-red-800 ring-red-600/20",
+    classes: "bg-red-100 text-red-800 ring-red-600/20 dark:bg-red-500/15 dark:text-red-300 dark:ring-red-400/30",
     icon: (
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5" aria-hidden="true">
         <circle cx="8" cy="8" r="5.75" />
